@@ -92,7 +92,9 @@ let createdProductId = null;
 test('health endpoint reports ok', async () => {
   const res = await guest.get('/api/health');
   assert.equal(res.status, 200);
+  assert.equal(res.body.status, 'ok');
   assert.equal(res.body.ok, true);
+  assert.equal(res.body.service, 'shopsphere');
 });
 
 test('seeded catalog exposes categories and products', async () => {
