@@ -1,12 +1,12 @@
-import { Link, useLocation, parseLocation } from '../lib/router.jsx';
-import { useAuth } from '../state/AuthContext.jsx';
+import { Link, useLocation, parseLocation } from '../../lib/router.jsx';
+import { useAuth } from '../../state/AuthContext.jsx';
 import {
   IconBox,
   IconChart,
   IconGrid,
   IconOrders,
   IconUsers,
-} from '../components/icons.jsx';
+} from '../../components/icons.jsx';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: IconChart, exact: true },
