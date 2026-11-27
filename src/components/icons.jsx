@@ -97,6 +97,19 @@ export const IconBox = (props) => (
   </svg>
 );
 
+export const IconChart = (props) => (
+  <svg {...base} {...props}>
+    <path d="M4 20V4M4 20h16" />
+    <path d="M8 17v-5M12.5 17V8M17 17v-3" />
+  </svg>
+);
+
+export const IconGrid = (props) => (
+  <svg {...base} {...props}>
+    <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />
+  </svg>
+);
+
 export const IconDashboard = (props) => (
   <svg {...base} {...props}>
     <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z" />
