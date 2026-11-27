@@ -30,11 +30,13 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 /** Minimal cookie-aware HTTP client so sessions behave like a browser. */
 function makeClient() {
-  let cookie = '';
+  const cookies = new Map();
   async function call(method, pathname, body) {
     const headers = {};
     if (body !== undefined) headers['content-type'] = 'application/json';
-    if (cookie) headers.cookie = cookie;
+    if (cookies.size) {
+      headers.cookie = [...cookies].map(([name, value]) => `${name}=${value}`).join('; ');
+    }
     const res = await fetch(base + pathname, {
       method,
       headers,
@@ -45,7 +47,13 @@ function makeClient() {
       : [res.headers.get('set-cookie')].filter(Boolean);
     for (const entry of raw) {
       const pair = entry.split(';')[0];
-      if (pair && !pair.endsWith('=')) cookie = pair;
+      const index = pair.indexOf('=');
+      if (index <= 0) continue;
+      const name = pair.slice(0, index).trim();
+      const value = pair.slice(index + 1).trim();
+      // An empty value means the server cleared the cookie (logout).
+      if (value) cookies.set(name, value);
+      else cookies.delete(name);
     }
     const text = await res.text();
     let json = null;
