@@ -49,7 +49,7 @@ export default function Orders() {
         <EmptyState
           icon={<IconBox width={26} height={26} />}
           title="No orders yet"
-          description="When you place your first order it will show up here with live status updates."
+          message="When you place your first order it will show up here with live status updates."
           action={
             <Link to="/shop" className="btn btn-primary">
               Start shopping
