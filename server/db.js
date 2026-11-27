@@ -158,9 +158,8 @@ const PRODUCT_SEED = [
     '15W Qi2 wireless charging pad with a machined aluminium body and non-slip base.'],
 ];
 
-export function seedDatabase() {
-  const { hashPassword } = globalThis.__shopsphereAuth || {};
-  const hasher = hashPassword || ((pw) => pw); // replaced below when auth module is loaded
+export function seedDatabase(hashPassword) {
+  const hasher = hashPassword;
 
   const userCount = db.prepare('SELECT COUNT(*) AS c FROM users').get().c;
   if (userCount === 0) {
@@ -258,6 +257,5 @@ export function seedDatabase() {
 }
 
 export function initDatabase(hashPassword) {
-  globalThis.__shopsphereAuth = { hashPassword };
-  seedDatabase();
+  seedDatabase(hashPassword);
 }
