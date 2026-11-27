@@ -1,21 +1,26 @@
-FROM node:26-alpine AS build
-RUN apk upgrade --no-cache
+# ShopSphere production image.
+# Node 22 LTS is used because better-sqlite3 11.x ships prebuilt binaries for it;
+# the build stage also carries a toolchain so it can compile from source if needed.
+FROM node:22-alpine AS build
+RUN apk upgrade --no-cache && apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
-# The build needs dev dependencies; they are removed before the copy below.
+# Build the client, then drop dev dependencies so the runtime image stays small.
 RUN npm run build && npm prune --omit=dev
-FROM node:26-alpine
+
+FROM node:22-alpine
 # The date keys the build cache so this layer installs today's OS fixes; AppJet keeps it current on deploy.
 RUN echo "os-refresh 2026-11-27" && apk upgrade --no-cache
 WORKDIR /app
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOST=0.0.0.0 \
+    DATA_DIR=/app/data \
+    HOME=/home/appjet
 COPY --from=build /app ./
-ENV NODE_ENV=production
-ENV PORT=3000
-EXPOSE 3000
-# IMPORTANT: your server MUST listen on 0.0.0.0 and process.env.PORT.
-RUN mkdir -p /app /home/appjet && chown -R 10001:10001 /app /home/appjet
-ENV HOME=/home/appjet
+RUN mkdir -p /app/data /home/appjet && chown -R 10001:10001 /app /home/appjet
 USER 10001:10001
-CMD ["npm","start"]
+EXPOSE 3000
+CMD ["node", "server/index.js"]
