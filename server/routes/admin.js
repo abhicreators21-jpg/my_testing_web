@@ -339,6 +339,7 @@ router.get(
                 (SELECT COALESCE(SUM(o.total_cents), 0) FROM orders o
                   WHERE o.user_id = u.id AND o.status <> 'cancelled') AS spent_cents
            FROM users u
+          WHERE u.role = 'customer'
           ORDER BY u.created_at DESC, u.id DESC`,
       )
       .all();
