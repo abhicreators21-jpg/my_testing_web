@@ -146,7 +146,9 @@ test('registration validates input and creates a customer session', async () => 
     password: 'short',
   });
   assert.equal(invalid.status, 422);
-  assert.ok(invalid.body.errors, 'expected field-level validation errors');
+  assert.ok(invalid.body.fields, 'expected field-level validation errors');
+  assert.ok(invalid.body.fields.email, 'email should be flagged');
+  assert.ok(invalid.body.fields.password, 'password should be flagged');
 
   const created = await alice.post('/api/auth/register', {
     name: 'Alice Customer',
