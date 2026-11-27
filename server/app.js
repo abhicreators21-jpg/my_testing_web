@@ -30,8 +30,14 @@ export function createApp() {
   // Attach the signed-in user to every API request.
   app.use('/api', attachUser);
 
+  // Health probe. `status` is the documented contract field; `ok` is kept as an alias.
   app.get('/api/health', (_req, res) => {
-    res.json({ ok: true, service: 'shopsphere', database: path.basename(DB_FILE) });
+    res.json({
+      status: 'ok',
+      ok: true,
+      service: 'shopsphere',
+      database: path.basename(DB_FILE),
+    });
   });
 
   app.use('/api/auth', authRoutes);
